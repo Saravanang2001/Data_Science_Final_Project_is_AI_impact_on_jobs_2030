@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 
@@ -22,27 +23,36 @@ def KMeans_clustering(data):
 
     # Apply k-Means clustering
     kmeans = KMeans(n_clusters=3, random_state=98)
-    kmeans.fit(scaled)
+    df['Cluster'] = kmeans.fit_predict(scaled)
 
-    # Assign cluster labels
-    df['Cluster'] = kmeans.labels_
+    # ------------------- Scatter Plot -------------------
+    plt.figure(figsize=(8, 6))
+    plt.scatter(
+        df['Years_Experience'],
+        df['Average_Salary'],
+        c=df['Cluster'],
+        cmap='viridis',
+        s=100
+    )
 
-    # Display Cluster 1
-    cluster1 = df[df['Cluster'] == 0]
+    plt.xlabel("Years of Experience")
+    plt.ylabel("Average Salary")
+    plt.title("k-Means Clustering of Jobs (Scatter Plot)")
+    plt.colorbar(label="Cluster")
+    plt.tight_layout()
+    plt.show()
+    # ----------------------------------------------------
+
+    # Display Cluster-wise Data
     print("Cluster 1 Data (Low level jobs):")
-    print(cluster1)
+    print(df[df['Cluster'] == 0])
 
-    # Display Cluster 2
-    cluster2 = df[df['Cluster'] == 1]
     print("\nCluster 2 Data (Mid level jobs):")
-    print(cluster2)
+    print(df[df['Cluster'] == 1])
 
-    # Display Cluster 3
-    cluster3 = df[df['Cluster'] == 2]
     print("\nCluster 3 Data (High level jobs):")
-    print(cluster3)
+    print(df[df['Cluster'] == 2])
 
-    # Display complete dataset
     print("\nComplete Data with Cluster Labels:")
     print(df)
 
